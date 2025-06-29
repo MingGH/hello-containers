@@ -8,24 +8,27 @@ export class MyContainer extends Container {
   sleepAfter = "2m";
   // 传递给容器的环境变量
   envVars = {
-    MESSAGE: "I was passed in via the container class!",
+    MESSAGE: "我是通过容器类传入的!",
   };
 
   // 可选的生命周期钩子
   override onStart() {
-    console.log("Container successfully started");
+    console.log("容器成功启动");
   }
 
   override onStop() {
-    console.log("Container successfully shut down");
+    console.log("容器成功关闭");
   }
 
   override onError(error: unknown) {
-    console.log("Container error:", error);
+    console.log("容器错误:", error);
   }
 }
 
-// 创建Hono应用程序，并为Cloudflare Workers使用适当的类型
+/**
+ * 程序入口
+ *  创建Hono应用程序，并为Cloudflare Workers使用适当的类型
+  */
 const app = new Hono<{
   Bindings: { MY_CONTAINER: DurableObjectNamespace<MyContainer> };
 }>();
@@ -33,7 +36,7 @@ const app = new Hono<{
 // 带有可用端点的主路由
 app.get("/", (c) => {
   return c.text(
-    "Available endpoints:\n" +
+    "可用 endpoints:\n" +
       "GET /container/<ID> - 为每个ID启动一个容器，并设置2m超时\n" +
       "GET /lb - 跨多个容器的负载平衡请求\n" +
       "GET /error - 启动一个出错的容器（演示错误处理）\n" +
