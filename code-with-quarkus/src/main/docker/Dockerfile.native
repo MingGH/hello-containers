@@ -1,0 +1,21 @@
+# 使用这个Dockerfile是为了构建一个以本机（无JVM）模式运行Quarkus应用程序的容器。
+# 在构建容器映像之前，运行
+# ./mvnw package -Dnative
+# 然后，使用以下命令构建镜像：
+# docker build -f src/main/docker/Dockerfile.native -t quarkus/code-with-quarkus .
+# 然后使用以下命令运行容器：
+# docker run -i --rm -p 8080:8080 quarkus/code-with-quarkus
+# The ` registry.access.redhat.com/ubi9/ubi-minimal:9.5` base image is based on UBI 9.
+# To use UBI 8, switch to `quay.io/ubi8/ubi-minimal:8.10`.
+
+FROM registry.access.redhat.com/ubi9/ubi-minimal:9.5
+WORKDIR /work/
+RUN chown 1001 /work \
+    && chmod "g+rwX" /work \
+    && chown 1001:root /work
+COPY --chown=1001:root --chmod=0755 target/*-runner /work/application
+
+EXPOSE 8080
+USER 1001
+
+ENTRYPOINT ["./application", "-Dquarkus.http.host=0.0.0.0"]
