@@ -8,11 +8,11 @@
 
 This is a [Container](https://developers.cloudflare.com/containers/) starter template.
 
-It demonstrates basic Container coniguration, launching and routing to individual container, load balancing over multiple container, running basic hooks on container status changes.
+它演示了基本的容器配置、单个容器的启动和路由、多个容器的负载平衡、在容器状态变化时运行基本钩子。
 
 <!-- dash-content-end -->
 
-Outside of this repo, you can start a new project with this template using [C3](https://developers.cloudflare.com/pages/get-started/c3/) (the `create-cloudflare` CLI):
+在此版本库之外，您可以使用 [C3](https://developers.cloudflare.com/pages/get-started/c3/)（"create-cloudflare "CLI）使用此模板启动一个新项目：
 
 ```bash
 npm create cloudflare@latest -- --template=cloudflare/templates/containers-template
@@ -32,7 +32,7 @@ pnpm install
 bun install
 ```
 
-Then run the development server (using the package manager of your choice):
+然后运行开发服务器（使用您选择的包管理器）：
 
 ```bash
 npm run dev
@@ -40,8 +40,8 @@ npm run dev
 
 Open [http://localhost:8787](http://localhost:8787) with your browser to see the result.
 
-You can start editing your Worker by modifying `src/index.ts` and you can start
-editing your Container by editing the content of `container_src`.
+您可以通过修改 `src/index.ts` 开始编辑 Worker，也可以通过编辑 `container_src` 开始编辑 Container。
+内容开始编辑容器。
 
 ## Deploying To Production
 

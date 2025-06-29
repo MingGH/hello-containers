@@ -2,16 +2,16 @@ import { Container, loadBalance, getContainer } from "@cloudflare/containers";
 import { Hono } from "hono";
 
 export class MyContainer extends Container {
-  // Port the container listens on (default: 8080)
+  // 容器监听的端口（默认：8080）
   defaultPort = 8080;
-  // Time before container sleeps due to inactivity (default: 30s)
+  // 容器因不活动而休眠的时间（默认：30s）
   sleepAfter = "2m";
-  // Environment variables passed to the container
+  // 传递给容器的环境变量
   envVars = {
     MESSAGE: "I was passed in via the container class!",
   };
 
-  // Optional lifecycle hooks
+  // 可选的生命周期钩子
   override onStart() {
     console.log("Container successfully started");
   }
@@ -25,23 +25,23 @@ export class MyContainer extends Container {
   }
 }
 
-// Create Hono app with proper typing for Cloudflare Workers
+// 创建Hono应用程序，并为Cloudflare Workers使用适当的类型
 const app = new Hono<{
   Bindings: { MY_CONTAINER: DurableObjectNamespace<MyContainer> };
 }>();
 
-// Home route with available endpoints
+// 带有可用端点的主路由
 app.get("/", (c) => {
   return c.text(
     "Available endpoints:\n" +
-      "GET /container/<ID> - Start a container for each ID with a 2m timeout\n" +
-      "GET /lb - Load balance requests over multiple containers\n" +
-      "GET /error - Start a container that errors (demonstrates error handling)\n" +
-      "GET /singleton - Get a single specific container instance",
+      "GET /container/<ID> - 为每个ID启动一个容器，并设置2m超时\n" +
+      "GET /lb - 跨多个容器的负载平衡请求\n" +
+      "GET /error - 启动一个出错的容器（演示错误处理）\n" +
+      "GET /singleton - 获取单个特定容器实例",
   );
 });
 
-// Route requests to a specific container using the container ID
+// 使用容器ID将请求路由到特定容器
 app.get("/container/:id", async (c) => {
   const id = c.req.param("id");
   const containerId = c.env.MY_CONTAINER.idFromName(`/container/${id}`);
@@ -49,19 +49,19 @@ app.get("/container/:id", async (c) => {
   return await container.fetch(c.req.raw);
 });
 
-// Demonstrate error handling - this route forces a panic in the container
+// 演示错误处理——该路由在容器中强制panic
 app.get("/error", async (c) => {
   const container = getContainer(c.env.MY_CONTAINER, "error-test");
   return await container.fetch(c.req.raw);
 });
 
-// Load balance requests across multiple containers
+// 跨多个容器的负载平衡请求
 app.get("/lb", async (c) => {
   const container = await loadBalance(c.env.MY_CONTAINER, 3);
   return await container.fetch(c.req.raw);
 });
 
-// Get a single container instance (singleton pattern)
+// 获取单个容器实例（单例模式）
 app.get("/singleton", async (c) => {
   const container = getContainer(c.env.MY_CONTAINER);
   return await container.fetch(c.req.raw);
