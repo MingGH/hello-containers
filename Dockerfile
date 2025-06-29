@@ -11,7 +11,7 @@ WORKDIR /code
 COPY code-with-quarkus /code
 
 # 构建 native 可执行文件（GraalVM 构建托管在容器里）
-RUN ./mvn package -Dnative -Dquarkus.native.container-build=true
+RUN ./mvnw package -Dnative -Dquarkus.native.container-build=true
 
 # 运行阶段：使用 distroless 镜像运行编译好的 native 可执行文件
 FROM gcr.io/distroless/base-debian12
