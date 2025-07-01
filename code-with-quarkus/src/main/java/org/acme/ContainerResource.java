@@ -31,4 +31,13 @@ public class ContainerResource {
     }
 
 
+    @GET
+    @Path("/singleton")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String singleton() {
+        return "quarkus singleton";
+    }
+
+
+
 }
